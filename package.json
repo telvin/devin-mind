@@ -1,0 +1,51 @@
+{
+  "name": "devin-workflow",
+  "version": "1.0.2",
+  "description": "~Devin AI workflow automation",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "test-runner": "node test/test-runner.js",
+    "unit-test-executor": "node --experimental-vm-modules ./node_modules/.bin/jest test/workflow-executor.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-handoff": "node --experimental-vm-modules ./node_modules/.bin/jest test/handoff-manager.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-parser": "node --experimental-vm-modules ./node_modules/.bin/jest test/workflow-parser.unit.test.js --runInBand --detectOpenHandles",
+    "sample-run": " node index.js --file <path-to-file/test-session.md"
+  },
+  "keywords": [
+    "mcp",
+    "devin",
+    "ai",
+    "workflow",
+    "automation"
+  ],
+  "author": "Telvin Nguyen <telvin.nguyen@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.1.0",
+    "jest": "^30.1.0",
+    "dotenv": "^17.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/telvin/devin-mind.git"
+  },
+  "homepage": "https://github.com/telvin/devin-mind#readme",
+  "bugs": {
+    "url": "https://github.com/telvin/devin-mind/issues"
+  },
+  "files": [
+    "src/",
+    "index.js",
+    "README.MD"
+  ]
+}
