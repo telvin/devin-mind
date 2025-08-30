@@ -26,7 +26,7 @@ export async function startWorkflow(workflow, options = {}) {
         // Extract options with defaults
         const {
             apiKey = options.apiKey || process.env.DEVIN_API_KEY,
-            useMockMode = !process.env.DEVIN_API_KEY || !process.env.DEVIN_API_KEY.trim() || process.env.NODE_ENV === 'test',
+            useMockMode = process.env.NODE_ENV === 'test',
             pollingInterval = 10, // seconds
             firstPollingInterval = 90, // seconds
             timeout = 300, // seconds (5 minutes)

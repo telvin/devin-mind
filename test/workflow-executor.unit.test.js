@@ -189,12 +189,18 @@ describe('WorkflowExecutor', () => {
 
         it('should enable mock mode when no API key is available', async () => {
             delete process.env.DEVIN_API_KEY;
+            delete process.env.NODE_ENV; // Ensure not in test mode
 
             const workflow = '# Test Workflow\n## Step 1\n**Prompt:** Test';
 
-            await startWorkflow(workflow, { verbose: false });
+            const result = await startWorkflow(workflow, { 
+                verbose: false,
+                useMockMode: false // Explicitly disable mock mode
+            });
 
-            expect(mockClient.setMockMode).toHaveBeenCalledWith(true, 'http://localhost:3001/v1');
+            // With the new logic, missing API key should fail when not in mock mode
+            expect(result.success).toBe(false);
+            expect(result.error).toBe('API key is required. Please provide it via --apiKey option or set DEVIN_API_KEY environment variable.');
         });
 
         it('should disable mock mode when API key is provided via options', async () => {
@@ -499,24 +505,34 @@ describe('WorkflowExecutor', () => {
     describe('Environment Variable Edge Cases', () => {
         it('should handle empty string API key from environment', async () => {
             process.env.DEVIN_API_KEY = '';
+            delete process.env.NODE_ENV; // Ensure not in test mode
 
             const workflow = '# Test Workflow\n## Step 1\n**Prompt:** Test';
 
-            await startWorkflow(workflow, { verbose: false });
+            const result = await startWorkflow(workflow, { 
+                verbose: false,
+                useMockMode: false // Explicitly disable mock mode
+            });
 
-            expect(mockClient.setApiKey).toHaveBeenCalledWith('');
-            expect(mockClient.setMockMode).toHaveBeenCalledWith(true, 'http://localhost:3001/v1');
+            // Empty API key should now fail when not in mock mode
+            expect(result.success).toBe(false);
+            expect(result.error).toBe('API key cannot be empty. Please provide a valid API key via --apiKey option or set DEVIN_API_KEY environment variable.');
         });
 
         it('should handle whitespace-only API key from environment', async () => {
             process.env.DEVIN_API_KEY = '   ';
+            delete process.env.NODE_ENV; // Ensure not in test mode
 
             const workflow = '# Test Workflow\n## Step 1\n**Prompt:** Test';
 
-            await startWorkflow(workflow, { verbose: false });
+            const result = await startWorkflow(workflow, { 
+                verbose: false,
+                useMockMode: false // Explicitly disable mock mode
+            });
 
-            // Whitespace-only API key should trigger mock mode, not pass through
-            expect(mockClient.setMockMode).toHaveBeenCalledWith(true, 'http://localhost:3001/v1');
+            // Whitespace-only API key should now fail when not in mock mode
+            expect(result.success).toBe(false);
+            expect(result.error).toBe('API key cannot be empty. Please provide a valid API key via --apiKey option or set DEVIN_API_KEY environment variable.');
         });
 
         it('should override empty environment variable with options API key', async () => {
@@ -531,6 +547,30 @@ describe('WorkflowExecutor', () => {
             });
 
             expect(mockClient.setApiKey).toHaveBeenCalledWith(optionsApiKey);
+        });
+
+        it('should enable mock mode for empty API key when in test environment', async () => {
+            process.env.DEVIN_API_KEY = '';
+            process.env.NODE_ENV = 'test';
+
+            const workflow = '# Test Workflow\n## Step 1\n**Prompt:** Test';
+
+            await startWorkflow(workflow, { verbose: false });
+
+            // Mock mode should be enabled in test environment
+            expect(mockClient.setMockMode).toHaveBeenCalledWith(true, 'http://localhost:3001/v1');
+        });
+
+        it('should enable mock mode for whitespace API key when in test environment', async () => {
+            process.env.DEVIN_API_KEY = '   ';
+            process.env.NODE_ENV = 'test';
+
+            const workflow = '# Test Workflow\n## Step 1\n**Prompt:** Test';
+
+            await startWorkflow(workflow, { verbose: false });
+
+            // Mock mode should be enabled in test environment
+            expect(mockClient.setMockMode).toHaveBeenCalledWith(true, 'http://localhost:3001/v1');
         });
     });
 });
