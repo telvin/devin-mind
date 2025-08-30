@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devin Mind - Workflow Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Devin Mind - Workflow Manager</h1>
+            <div class="header-actions">
+                <button id="loadBtn" class="btn btn-primary">Load</button>
+                <button id="validateBtn" class="btn btn-secondary">Validate</button>
+                <button id="executeBtn" class="btn btn-success">Execute</button>
+                <button id="clearBtn" class="btn btn-outline">Clear</button>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <div class="editor-section">
+                <div class="section-header">
+                    <h2>Workflow Editor</h2>
+                    <span id="fileName" class="file-name"></span>
+                </div>
+                <textarea 
+                    id="workFlowEditor" 
+                    class="workflow-editor"
+                    placeholder="Paste your workflow content here or click 'Load' to load from file..."
+                    spellcheck="false"
+                ></textarea>
+            </div>
+
+            <div class="results-section">
+                <div class="section-header">
+                    <h2>Results</h2>
+                    <div class="status-indicators">
+                        <span id="envStatus" class="status-indicator"></span>
+                        <span id="validationStatus" class="status-indicator"></span>
+                    </div>
+                </div>
+                <div id="resultsContainer" class="results-container">
+                    <div class="results-placeholder">
+                        Results will appear here after validation or execution
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div id="progressBar" class="progress-bar hidden">
+            <div class="progress-fill"></div>
+            <span class="progress-text">Processing...</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
