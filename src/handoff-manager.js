@@ -5,6 +5,22 @@ export class HandoffManager {
         this.firstPollingInterval = 90000; // 90 seconds default for first poll
         this.timeout = 300000; // 5 minutes default
         this.logHandoffInstructions = true; // New option to log handoff content
+        
+        // Validate ADO_URL environment variable
+        this.validateAdoUrl();
+    }
+
+    validateAdoUrl() {
+        const adoUrl = process.env.ADO_URL;
+        if (!adoUrl || adoUrl.trim() === '') {
+            const errorMessage = 'ADO_URL environment variable is required. Please set ADO_URL environment variable with your Azure DevOps URL.';
+            console.error('\n❌ ADO_URL Validation Failed');
+            console.error('=====================================');
+            console.error(`Error: ${errorMessage}`);
+            console.error('\nHow to fix:');
+            console.error('Set environment variable: export ADO_URL="dev.azure.com/access-devops/Access%20Vincere/_git/"\n');
+            throw new Error(errorMessage);
+        }
     }
 
     setPollingInterval(intervalMs) {
@@ -45,8 +61,17 @@ export class HandoffManager {
             return repo;
         }
 
-        // If it's a shortcut, expand to full Azure DevOps URL
-        return `dev.azure.com/access-devops/Access%20Vincere/_git/${repo}`;
+        // Get ADO_URL from environment variable
+        const adoUrl = process.env.ADO_URL;
+        if (!adoUrl) {
+            throw new Error('ADO_URL environment variable is not set');
+        }
+
+        // Ensure ADO_URL ends with a slash for proper concatenation
+        const baseUrl = adoUrl.endsWith('/') ? adoUrl : `${adoUrl}/`;
+
+        // If it's a shortcut, expand using the ADO_URL environment variable
+        return `${baseUrl}${repo}`;
     }
 
     async executeWorkflow(steps) {

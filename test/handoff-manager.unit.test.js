@@ -3,6 +3,8 @@ import {
     describe,
     it,
     expect,
+    beforeEach,
+    afterEach,
 } from '@jest/globals';
 
 // Mock DevinClient for testing
@@ -43,6 +45,54 @@ class MockDevinClient {
 }
 
 describe('HandoffManager', () => {
+    let originalAdoUrl;
+
+    beforeEach(() => {
+        // Save original ADO_URL if it exists
+        originalAdoUrl = process.env.ADO_URL;
+        // Set test ADO_URL for all tests
+        process.env.ADO_URL = 'dev.azure.com/access-devops/Access%20Vincere/_git/';
+    });
+
+    afterEach(() => {
+        // Restore original ADO_URL
+        if (originalAdoUrl !== undefined) {
+            process.env.ADO_URL = originalAdoUrl;
+        } else {
+            delete process.env.ADO_URL;
+        }
+    });
+
+    it('should validate ADO_URL environment variable on construction', () => {
+        const devinClient = new MockDevinClient();
+        
+        // Test with valid ADO_URL (already set in beforeEach)
+        expect(() => {
+            new HandoffManager(devinClient);
+        }).not.toThrow();
+
+        // Test with missing ADO_URL
+        delete process.env.ADO_URL;
+        expect(() => {
+            new HandoffManager(devinClient);
+        }).toThrow('ADO_URL environment variable is required. Please set ADO_URL environment variable with your Azure DevOps URL.');
+
+        // Test with empty ADO_URL
+        process.env.ADO_URL = '';
+        expect(() => {
+            new HandoffManager(devinClient);
+        }).toThrow('ADO_URL environment variable is required. Please set ADO_URL environment variable with your Azure DevOps URL.');
+
+        // Test with whitespace-only ADO_URL
+        process.env.ADO_URL = '   ';
+        expect(() => {
+            new HandoffManager(devinClient);
+        }).toThrow('ADO_URL environment variable is required. Please set ADO_URL environment variable with your Azure DevOps URL.');
+
+        // Restore for other tests
+        process.env.ADO_URL = 'dev.azure.com/access-devops/Access%20Vincere/_git/';
+    });
+
     it('should inject previous handoff data into the next step when RelyPreviousStep is true', async () => {
         const devinClient = new MockDevinClient();
         const manager = new HandoffManager(devinClient);
