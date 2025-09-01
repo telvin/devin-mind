@@ -1,0 +1,578 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Container */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+/* Header */
+.app-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+.header-left h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.header-right {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.env-status {
+  display: flex;
+  gap: 1rem;
+}
+
+.status-indicator {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+.status-indicator.connected {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-indicator.disconnected {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Status Bar */
+.status-bar {
+  background: #fff;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+.status-indicators {
+  display: flex;
+  gap: 1rem;
+}
+
+.status-indicator.env-ok {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-indicator.env-warning {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-indicator.validation-valid {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-indicator.validation-invalid {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.file-name {
+  color: #6c757d;
+  font-style: italic;
+}
+
+/* Loading Overlay */
+.loading-overlay {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(5px);
+  border: 1px solid #e1e5e9;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.loading-content {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 0.9rem;
+  color: #333;
+  font-weight: 500;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Tab Container */
+.tab-container {
+  background: #ecf0f1;
+  border-bottom: 1px solid #bdc3c7;
+}
+
+.tab-bar {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+}
+
+.tab {
+  background: #bdc3c7;
+  border: 1px solid #95a5a6;
+  border-bottom: none;
+  border-radius: 6px 6px 0 0;
+  padding: 8px 12px;
+  margin-right: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+}
+
+.tab.active {
+  background: white;
+  border-color: #667eea;
+}
+
+.tab-label {
+  font-size: 13px;
+}
+
+.tab-close {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #666;
+  padding: 0 2px;
+}
+
+.tab-close:hover {
+  color: #333;
+}
+
+.add-tab-btn {
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 10px;
+  margin-left: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-tab-btn:hover {
+  background: #2980b9;
+}
+
+/* Tab Content Styles */
+.tab-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Tab Header with Action Buttons */
+.tab-header {
+  background: #fff;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tab-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Tab Status Bar */
+.tab-status-bar {
+  background: #f8f9fa;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+}
+
+/* Section Styles */
+.editor-section,
+.progress-section,
+.results-section {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.editor-section {
+  flex: 1;
+  min-height: 250px;
+}
+
+.progress-section {
+  flex: 0 0 auto;
+  height: 400px;
+}
+
+.progress-section.collapsed {
+  height: 60px;
+  min-height: 60px;
+}
+
+.results-section {
+  flex: 1;
+  min-height: 200px;
+}
+
+.results-section.collapsed {
+  flex: 0 0 auto;
+  height: 60px;
+  min-height: 60px;
+}
+
+.section-header {
+  background: #f8f9fa;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e1e5e9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-header:hover {
+  background: #e9ecef;
+}
+
+.section-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.section-header .header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #6c757d;
+  padding: 0.25rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.collapse-btn:hover {
+  background: #dee2e6;
+  color: #495057;
+}
+
+.section-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.section-content.collapsed {
+  flex: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Editor */
+.workflow-editor {
+  flex: 1;
+  width: 100%;
+  border: none;
+  padding: 1.5rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  resize: none;
+  outline: none;
+  background: #fafafa;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: auto;
+  min-height: 300px;
+  max-height: 600px;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.workflow-editor:focus {
+  background: white;
+}
+
+/* Ensure proper scrollbar styling */
+.workflow-editor::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.workflow-editor::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.workflow-editor::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 4px;
+}
+
+.workflow-editor::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Progress Log */
+.progress-log {
+  flex: 1;
+  padding: 1rem;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.85rem;
+  background: #1e1e1e;
+  color: #d4d4d4;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.4;
+}
+
+.progress-log .log-entry {
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.progress-log .log-entry.info {
+  color: #9cdcfe;
+}
+
+.progress-log .log-entry.success {
+  color: #4ec9b0;
+}
+
+.progress-log .log-entry.warning {
+  color: #dcdcaa;
+}
+
+.progress-log .log-entry.error {
+  color: #f44747;
+}
+
+/* Results */
+.results-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background: white;
+}
+
+.result-item {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #e1e5e9;
+  border-radius: 6px;
+  background: #f8f9fa;
+}
+
+.result-title {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 0.5rem;
+}
+
+.result-content {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  font-size: 0.85rem;
+  color: #6c757d;
+  white-space: pre-wrap;
+}
+
+/* Buttons */
+.btn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Button Color Variants - matching electron app colors */
+.btn-primary {
+  background: #007bff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.btn-secondary {
+  background: #6c757d;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #545b62;
+}
+
+.btn-success {
+  background: #28a745;
+}
+
+.btn-success:hover:not(:disabled) {
+  background: #1e7e34;
+}
+
+.btn-danger {
+  background: #dc3545;
+}
+
+.btn-danger:hover:not(:disabled) {
+  background: #bd2130;
+}
+
+.btn-warning {
+  background: #ffc107;
+  color: #212529;
+}
+
+.btn-warning:hover:not(:disabled) {
+  background: #e0a800;
+}
+
+/* Small button variant */
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  min-width: 60px;
+}
+
+/* Validation status styling */
+.btn.validation-success {
+  background: #28a745;
+  color: white;
+}
+
+.btn.validation-error {
+  background: #dc3545;
+  color: white;
+}
+
+/* Tab Loading Overlay */
+.tab-loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}

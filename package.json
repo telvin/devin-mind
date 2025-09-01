@@ -1,0 +1,81 @@
+{
+  "name": "devin-mind",
+  "version": "1.0.3",
+  "description": "Workflow management application for Devin AI automation",
+  "main": "electron-entry.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "NODE_ENV=development electron .",
+    "test-runner": "node test/test-runner.js",
+    "unit-test-executor": "node --experimental-vm-modules ./node_modules/.bin/jest test/workflow-executor.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-handoff": "node --experimental-vm-modules ./node_modules/.bin/jest test/handoff-manager.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-parser": "node --experimental-vm-modules ./node_modules/.bin/jest test/workflow-parser.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-electron-main": "node --experimental-vm-modules ./node_modules/.bin/jest test/electron-main.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-electron-renderer": "node --experimental-vm-modules ./node_modules/.bin/jest test/electron-renderer.unit.test.js --runInBand --detectOpenHandles",
+    "unit-test-electron-integration": "node --experimental-vm-modules ./node_modules/.bin/jest test/electron-integration.unit.test.js --runInBand --detectOpenHandles",
+    "test-electron": "npm run unit-test-electron-main && npm run unit-test-electron-renderer && npm run unit-test-electron-integration",
+    "test-all": "npm run unit-test-executor && npm run unit-test-handoff && npm run unit-test-parser && npm run test-electron",
+    "sample-run": " node index.js --file <path-to-file/test-session.md",
+    "electron": "electron .",
+    "electron-dev": "NODE_ENV=development electron .",
+    "build": "electron-builder",
+    "build-mac": "electron-builder --mac",
+    "build-win": "electron-builder --win",
+    "build-linux": "electron-builder --linux",
+    "build-all": "electron-builder --mac --win --linux",
+    "dist": "npm run build-all",
+    "pack": "electron-builder --dir"
+  },
+  "keywords": [
+    "workflow",
+    "automation",
+    "devin",
+    "ai",
+    "electron"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^26.0.0",
+    "electron-builder": "^24.0.0",
+    "@jest/globals": "^29.0.0",
+    "jest": "^29.0.0",
+    "eslint": "^8.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.5.0",
+    "markdown-it": "^13.0.0",
+    "node-fetch": "^3.0.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "dotenv": "^16.0.0"
+  },
+  "build": {
+    "appId": "com.yourcompany.devin-mind",
+    "productName": "Devin Mind",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron-entry.cjs",
+      "main.js",
+      "src/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testMatch": [
+      "**/test/**/*.test.js"
+    ]
+  }
+}
