@@ -10,15 +10,12 @@ import { startWorkflow, validateWorkflow } from './src/workflow-executor.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Determine if we're in development or production
-const isDev = process.env.NODE_ENV === 'development';
-
 class DevinMindApp {
     constructor() {
         this.mainWindow = null;
-        this.isDev = isDev;
-        this.currentProcess = null;
-        this.runningProcesses = new Map();
+        this.isDev = process.env.NODE_ENV === 'development';
+        this.currentProcess = null; // Track current execution process
+        this.runningProcesses = new Map(); // Track multiple processes by ID
         
         // Default settings
         this.settings = {
@@ -50,12 +47,8 @@ class DevinMindApp {
             enableLargerThanScreen: false
         });
 
-        // Load the app - this is the key fix for production vs development
-        const rendererPath = path.join(__dirname, 'electron', 'renderer', 'index.html');
-        console.log('Loading renderer from:', rendererPath);
-        console.log('File exists:', fs.existsSync(rendererPath));
-        
-        this.mainWindow.loadFile(rendererPath);
+        // Load the app
+        this.mainWindow.loadFile(path.join(__dirname, 'electron', 'renderer', 'index.html'));
 
         // Show window when ready
         this.mainWindow.once('ready-to-show', () => {
@@ -64,7 +57,6 @@ class DevinMindApp {
             if (this.isDev) {
                 this.mainWindow.webContents.openDevTools();
             }
-            console.log('Window shown successfully');
         });
 
         // Handle window closed
@@ -313,7 +305,6 @@ class DevinMindApp {
 
         // App event handlers
         app.whenReady().then(() => {
-            console.log('App ready, creating window...');
             this.createWindow();
 
             app.on('activate', () => {
@@ -327,7 +318,7 @@ class DevinMindApp {
 
         app.on('window-all-closed', () => {
             this.runningProcesses.forEach((processInfo, processId) => {
-                processInfo?.cancel();
+                processInfo.cancel();
             });
             this.runningProcesses.clear();
 
@@ -338,7 +329,7 @@ class DevinMindApp {
 
         app.on('before-quit', () => {
             this.runningProcesses.forEach((processInfo, processId) => {
-                processInfo?.cancel();
+                processInfo.cancel();
             });
             this.runningProcesses.clear();
         });
@@ -351,6 +342,7 @@ const devinApp = new DevinMindApp();
 // Add global error handling for unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
     console.error('Unhandled Promise Rejection:', reason);
+    console.error('Promise:', promise);
     // Don't exit the process, just log the error
 });
 
@@ -359,9 +351,5 @@ process.on('uncaughtException', (error) => {
     console.error('Uncaught Exception:', error);
     // Don't exit the process in production, just log the error
 });
-
-console.log('Starting Devin Mind app...');
-console.log('Development mode:', isDev);
-console.log('__dirname:', __dirname);
 
 devinApp.init();

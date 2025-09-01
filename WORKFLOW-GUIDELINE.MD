@@ -8,13 +8,39 @@ Workflows are defined in Markdown format where each step is represented as a lev
 
 ## Step Attributes Reference
 
-### **Playbook ID**
+### Repo
+
+**Purpose:** Specifies the repository that Devin will work on for this step. For the first step, this attribute is required. For subsequent steps, you may omit it if you want to continue working in the same repository as the previous step.
+
+**Format:**
+```markdown
+- Repo: [repository-url-or-path]
+```
+
+**Use Cases:**
+- When starting a workflow and you need to define which repository Devin should operate on
+- If you want to switch to a different repository in a later step
+- To clarify the context for Devin when working across multiple repositories
+
+**Examples:**
+```markdown
+## Step 1: Initialize Project
+- Repo: https://github.com/your-org/your-repo.git
+- Playbook ID: nodejs-setup-v2
+- Prompt: Set up the initial project structure
+
+## Step 2: Add Features
+- Prompt: Implement authentication middleware
+```
+*(In Step 2, `Repo` is omitted, so Devin continues to use the repository defined in Step 1)*
+
+### Playbook ID
 
 **Purpose:** Specifies which Devin playbook to use for this step.
 
 **Format:**
 ```markdown
-**Playbook ID:** your-playbook-id-here
+- Playbook ID: your-playbook-id-here
 ```
 
 **Use Cases:**
@@ -25,17 +51,17 @@ Workflows are defined in Markdown format where each step is represented as a lev
 **Example:**
 ```markdown
 ## Step 1: Setup Environment
-**Playbook ID:** nodejs-setup-v2
-**Prompt:** Initialize a new Node.js project with TypeScript
+- Playbook ID: nodejs-setup-v2
+- Prompt: Initialize a new Node.js project with TypeScript
 ```
 
-### **RelyPreviousStep**
+### RelyPreviousStep
 
 **Purpose:** Defines dependencies on previous workflow steps and specifies what data/results to use.
 
 **Format:**
 ```markdown
-**RelyPreviousStep:** [step-name] - [description of what to use]
+- RelyPreviousStep: [step-name] - [description of what to use]
 ```
 
 **Use Cases:**
@@ -47,21 +73,21 @@ Workflows are defined in Markdown format where each step is represented as a lev
 **Examples:**
 ```markdown
 ## Step 2: Add Features
-**RelyPreviousStep:** Step 1 - Use the project structure and package.json created
-**Prompt:** Add authentication middleware to the Express server
+- RelyPreviousStep: Step 1 - Use the project structure and package.json created
+- Prompt: Add authentication middleware to the Express server
 
 ## Step 3: Testing
-**RelyPreviousStep:** Step 2 - Use the authentication code and test the login functionality
-**Prompt:** Write comprehensive tests for the authentication system
+- RelyPreviousStep: Step 2 - Use the authentication code and test the login functionality
+- Prompt: Write comprehensive tests for the authentication system
 ```
 
-### **Prompt**
+### Prompt
 
 **Purpose:** The main instruction or task description that will be sent to Devin AI.
 
 **Format:**
 ```markdown
-**Prompt:** [Detailed task description]
+- Prompt: [Detailed task description]
 ```
 
 **Use Cases:**
@@ -78,20 +104,20 @@ Workflows are defined in Markdown format where each step is represented as a lev
 
 **Examples:**
 ```markdown
-**Prompt:** Create a React component for user authentication with email/password login, including form validation and error handling
+- Prompt: Create a React component for user authentication with email/password login, including form validation and error handling
 
-**Prompt:** Implement a RESTful API endpoint for user registration using Express.js and MongoDB, with input validation and password hashing
+- Prompt: Implement a RESTful API endpoint for user registration using Express.js and MongoDB, with input validation and password hashing
 
-**Prompt:** Write unit tests for the authentication service using Jest, ensuring 90% code coverage
+- Prompt: Write unit tests for the authentication service using Jest, ensuring 90% code coverage
 ```
 
-### **Handoff**
+### Handoff
 
 **Purpose:** Describes what will be delivered or completed when this step finishes, used for the next step or final output.
 
 **Format:**
 ```markdown
-**Handoff:** [Description of deliverables and outcomes]
+- Handoff: [Description of deliverables and outcomes]
 ```
 
 **Use Cases:**
@@ -102,11 +128,11 @@ Workflows are defined in Markdown format where each step is represented as a lev
 
 **Examples:**
 ```markdown
-**Handoff:** Complete authentication system with login/logout functionality, user session management, and protected routes
+- Handoff: Complete authentication system with login/logout functionality, user session management, and protected routes
 
-**Handoff:** Fully configured CI/CD pipeline with automated testing, code quality checks, and deployment to staging environment
+- Handoff: Fully configured CI/CD pipeline with automated testing, code quality checks, and deployment to staging environment
 
-**Handoff:** Database schema implemented with user tables, relationships, and sample data for testing
+- Handoff: Database schema implemented with user tables, relationships, and sample data for testing
 ```
 
 ## Complete Step Example
@@ -114,71 +140,45 @@ Workflows are defined in Markdown format where each step is represented as a lev
 ```markdown
 ## Step 2: Implement User Authentication
 
-**Playbook ID:** security-auth-v1
-**RelyPreviousStep:** Step 1 - Use the Express server setup and database connection
-**Prompt:** Implement a complete user authentication system with the following requirements:
-- JWT-based authentication
-- Password hashing using bcrypt
-- Login and registration endpoints
-- Middleware for protecting routes
-- Input validation and error handling
-- Integration with the MongoDB user collection created in Step 1
+- Playbook ID: security-auth-v1
+- RelyPreviousStep: Step 1 - Use the Express server setup and database connection
+- Prompt: Implement a complete user authentication system with the following requirements:
+  - JWT-based authentication
+  - Password hashing using bcrypt
+  - Login and registration endpoints
+  - Middleware for protecting routes
+  - Input validation and error handling
+  - Integration with the MongoDB user collection created in Step 1
 
-**Handoff:** Working authentication system with secure login/registration endpoints, JWT token generation, protected route middleware, and proper error handling. All authentication routes tested and documented.
-```
-
-## Optional Attributes
-
-### **Timeout**
-Specify custom timeout for this specific step:
-```markdown
-**Timeout:** 600
-```
-
-### **Priority**
-Set execution priority (for parallel workflows):
-```markdown
-**Priority:** high
-```
-
-### **Tags**
-Add tags for organization and filtering:
-```markdown
-**Tags:** frontend, react, components
-```
-
-### **Notes**
-Additional context or reminders:
-```markdown
-**Notes:** This step requires the API key to be configured in environment variables
+- Handoff: Working authentication system with secure login/registration endpoints, JWT token generation, protected route middleware, and proper error handling. All authentication routes tested and documented.
 ```
 
 ## Workflow Best Practices
 
-### 1. **Clear Step Names**
+### 1. Clear Step Names
 Use descriptive names that clearly indicate what the step accomplishes:
 - ✅ "Setup Database Schema and Models"
 - ❌ "Database Stuff"
 
-### 2. **Logical Dependencies**
+### 2. Logical Dependencies
 Structure `RelyPreviousStep` to create clear dependency chains:
 ```markdown
 Step 1: Project Setup → Step 2: Core Features → Step 3: Testing → Step 4: Deployment
 ```
 
-### 3. **Specific Prompts**
+### 3. Specific Prompts
 Write detailed prompts that leave no ambiguity:
 - Include specific technologies, frameworks, or libraries
 - Mention file locations and naming conventions
 - Specify coding standards and best practices
 
-### 4. **Clear Handoffs**
+### 4. Clear Handoffs
 Define handoffs that make it easy for the next step to continue:
 - List specific files that will be created or modified
 - Describe the functionality that will be available
 - Mention any configuration or setup that will be complete
 
-### 5. **Playbook Consistency**
+### 5. Playbook Consistency
 Use consistent playbook IDs across similar tasks:
 - `frontend-react-v1` for React-based frontend tasks
 - `backend-node-v2` for Node.js backend development
@@ -190,26 +190,26 @@ Use consistent playbook IDs across similar tasks:
 # E-commerce Application Development
 
 ## Step 1: Project Foundation
-**Playbook ID:** fullstack-setup-v1
-**Prompt:** Create a new full-stack e-commerce application with React frontend, Node.js/Express backend, and MongoDB database. Set up the basic project structure, package.json files, and development environment.
-**Handoff:** Complete project structure with frontend and backend folders, package.json configured, basic Express server running, and MongoDB connection established.
+- Playbook ID: fullstack-setup-v1
+- Prompt: Create a new full-stack e-commerce application with React frontend, Node.js/Express backend, and MongoDB database. Set up the basic project structure, package.json files, and development environment.
+- Handoff: Complete project structure with frontend and backend folders, package.json configured, basic Express server running, and MongoDB connection established.
 
 ## Step 2: User Authentication System
-**Playbook ID:** auth-security-v2
-**RelyPreviousStep:** Step 1 - Use the backend server setup and database connection
-**Prompt:** Implement comprehensive user authentication including registration, login, JWT tokens, password hashing, and protected routes middleware.
-**Handoff:** Working authentication system with secure endpoints, JWT implementation, and route protection ready for integration.
+- Playbook ID: auth-security-v2
+- RelyPreviousStep: Step 1 - Use the backend server setup and database connection
+- Prompt: Implement comprehensive user authentication including registration, login, JWT tokens, password hashing, and protected routes middleware.
+- Handoff: Working authentication system with secure endpoints, JWT implementation, and route protection ready for integration.
 
 ## Step 3: Product Management
-**RelyPreviousStep:** Step 2 - Use the authentication middleware and user models
-**Prompt:** Create product management functionality including CRUD operations for products, categories, inventory tracking, and admin-only product creation routes.
-**Handoff:** Complete product management API with database models, CRUD endpoints, and proper authorization checks.
+- RelyPreviousStep: Step 2 - Use the authentication middleware and user models
+- Prompt: Create product management functionality including CRUD operations for products, categories, inventory tracking, and admin-only product creation routes.
+- Handoff: Complete product management API with database models, CRUD endpoints, and proper authorization checks.
 
 ## Step 4: Frontend Components
-**Playbook ID:** react-ecommerce-v1
-**RelyPreviousStep:** Step 3 - Use the authentication and product APIs
-**Prompt:** Build React frontend components for user login, product catalog, shopping cart, and checkout process. Integrate with the backend APIs.
-**Handoff:** Fully functional e-commerce frontend with user authentication, product browsing, and shopping cart functionality.
+- Playbook ID: react-ecommerce-v1
+- RelyPreviousStep: Step 3 - Use the authentication and product APIs
+- Prompt: Build React frontend components for user login, product catalog, shopping cart, and checkout process. Integrate with the backend APIs.
+- Handoff: Fully functional e-commerce frontend with user authentication, product browsing, and shopping cart functionality.
 ```
 
 This structure ensures clear communication between steps, proper dependency management, and successful workflow execution across multiple Devin sessions.

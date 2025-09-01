@@ -3,13 +3,21 @@ import {DevinClient} from './devin-client.js';
 import {HandoffManager} from './handoff-manager.js';
 
 // Only load dotenv in development/test environments
-if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
-    try {
-        await import('dotenv/config');
-    } catch (err) {
-        // dotenv is optional - fail silently if not available
+const loadDotenv = async () => {
+    console.log(`workflow-executor => loadDotenv => NODE_ENV=${process.env.NODE_ENV}`);
+    if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+        try {
+            await import('dotenv/config');
+        } catch (err) {
+            // dotenv is optional - fail silently if not available
+        }
     }
-}
+};
+
+// Initialize dotenv loading but don't await it at module level
+loadDotenv().catch(() => {
+    // Silently handle any errors during dotenv loading
+});
 
 /**
  * One-click workflow execution function

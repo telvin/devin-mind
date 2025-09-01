@@ -15,6 +15,7 @@
     "unit-test-electron-integration": "node --experimental-vm-modules ./node_modules/.bin/jest test/electron-integration.unit.test.js --runInBand --detectOpenHandles",
     "test-electron": "npm run unit-test-electron-main && npm run unit-test-electron-renderer && npm run unit-test-electron-integration",
     "test-all": "npm run unit-test-executor && npm run unit-test-handoff && npm run unit-test-parser && npm run test-electron",
+    "test-production-integration": "node test/production-integration.test.js",
     "sample-run": " node index.js --file <path-to-file/test-session.md",
     "electron": "electron .",
     "electron-dev": "NODE_ENV=development electron .",
@@ -24,7 +25,13 @@
     "build-linux": "electron-builder --linux",
     "build-all": "electron-builder --mac --win --linux",
     "dist": "npm run build-all",
-    "pack": "electron-builder --dir"
+    "pack": "electron-builder --dir",
+    "test-prod-package": "npm run pack && npm run test-packed-app",
+    "test-packed-app": "node test/test-packed-app.js",
+    "pre-build-test": "npm run test-all && npm run test-production-integration && npm run test-prod-package",
+    "safe-build-mac": "npm run pre-build-test && npm run build-mac",
+    "safe-build-win": "npm run pre-build-test && npm run build-win",
+    "safe-build-all": "npm run pre-build-test && npm run build-all"
   },
   "keywords": [
     "workflow",
@@ -55,6 +62,7 @@
     "directories": {
       "output": "dist"
     },
+    "asar": false,
     "files": [
       "electron-entry.cjs",
       "main.js",
