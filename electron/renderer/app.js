@@ -700,6 +700,8 @@ class WorkflowApp {
             let statusText = '';
             let statusClass = '';
             
+            console.log(`app.js checkEnvironment result:`, env);
+            
             if (env.devinApiKey && env.adoUrl) {
                 statusText = 'ENV OK';
                 statusClass = 'env-ok';

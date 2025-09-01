@@ -305,6 +305,138 @@ class DevinMindApp {
                 };
             }
         });
+
+        // Environment check - MISSING HANDLER
+        ipcMain.handle('check-environment', async () => {
+            try {
+                return {
+                    devinApiKey: !!process.env.DEVIN_API_KEY,
+                    adoUrl: !!process.env.ADO_URL,
+                    nodeVersion: process.version
+                };
+            } catch (error) {
+                return { error: error.message };
+            }
+        });
+
+        // Workflow execution with real-time logging - MISSING HANDLER
+        ipcMain.handle('execute-workflow', async (event, content, options = {}) => {
+            try {
+                const processId = Date.now().toString();
+                
+                // Create a custom logger that sends output to the renderer
+                const logger = {
+                    log: (message) => {
+                        this.mainWindow?.webContents.send('workflow-output', {
+                            type: 'info',
+                            message: message
+                        });
+                    },
+                    error: (message) => {
+                        this.mainWindow?.webContents.send('workflow-output', {
+                            type: 'error',
+                            message: message
+                        });
+                    },
+                    warn: (message) => {
+                        this.mainWindow?.webContents.send('workflow-output', {
+                            type: 'warning',
+                            message: message
+                        });
+                    },
+                    success: (message) => {
+                        this.mainWindow?.webContents.send('workflow-output', {
+                            type: 'success',
+                            message: message
+                        });
+                    }
+                };
+
+                // Store process reference for potential termination
+                const executionPromise = startWorkflow(content, {
+                    ...options,
+                    maxPolls: this.settings.maxPolls,
+                    pollingInterval: this.settings.pollingInterval,
+                    firstPollingInterval: this.settings.firstPollingInterval,
+                    verbose: true,
+                    onProgress: (progress) => {
+                        this.mainWindow?.webContents.send('workflow-progress', progress);
+                    }
+                });
+
+                // Store the promise with a way to cancel it
+                this.runningProcesses.set(processId, {
+                    promise: executionPromise,
+                    cancelled: false,
+                    cancel: () => {
+                        this.runningProcesses.get(processId).cancelled = true;
+                    }
+                });
+
+                // Execute the workflow
+                const result = await executionPromise;
+
+                // Clean up process reference
+                this.runningProcesses.delete(processId);
+
+                this.mainWindow?.webContents.send('workflow-complete', {
+                    success: true,
+                    result
+                });
+
+                return { success: true, result, processId };
+
+            } catch (error) {
+                this.mainWindow?.webContents.send('workflow-complete', {
+                    success: false,
+                    error: error.message
+                });
+
+                return { success: false, error: error.message };
+            }
+        });
+
+        // Stop workflow execution - MISSING HANDLER
+        ipcMain.handle('stop-workflow-execution', async (event, processId) => {
+            try {
+                if (processId && this.runningProcesses.has(processId)) {
+                    const processInfo = this.runningProcesses.get(processId);
+                    processInfo.cancel();
+                    
+                    this.mainWindow?.webContents.send('workflow-output', {
+                        type: 'warning',
+                        message: 'Stopping workflow execution...'
+                    });
+
+                    return { success: true };
+                }
+                return { success: false, error: 'No running process found' };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        });
+
+        // Save results - MISSING HANDLER
+        ipcMain.handle('save-results', async (event, results) => {
+            try {
+                const result = await dialog.showSaveDialog(this.mainWindow, {
+                    filters: [
+                        { name: 'HTML Files', extensions: ['html'] },
+                        { name: 'Text Files', extensions: ['txt'] },
+                        { name: 'All Files', extensions: ['*'] }
+                    ]
+                });
+
+                if (!result.canceled) {
+                    fs.writeFileSync(result.filePath, results, 'utf8');
+                    return { success: true, filePath: result.filePath };
+                }
+
+                return { success: false, canceled: true };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        });
     }
 
     init() {
