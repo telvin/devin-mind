@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Devin Mind - Workflow Executor</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-title">
+                <img src="../assets/images/devin-mind-logo-circle.png" alt="Devin Mind Logo" class="app-logo">
+                <h1>Devin Mind</h1>
+            </div>
+            <div class="header-info">
+                <div class="status-indicators">
+                    <div id="envStatus" class="status-indicator">ENV</div>
+                </div>
+                <button id="settingsBtn" class="btn btn-secondary btn-sm">Settings</button>
+            </div>
+        </header>
+
+        <!-- Tab System -->
+        <div class="tab-container">
+            <div class="tab active" data-tab-id="tab-1">
+                <span class="tab-label">Session 1</span>
+                <button class="tab-close" onclick="event.stopPropagation(); app.closeTab('tab-1')">&times;</button>
+            </div>
+            <button class="add-tab-btn" onclick="app.addNewTab()">+</button>
+        </div>
+
+        <!-- Tab Content Container -->
+        <div id="tabContentContainer">
+            <!-- Tab 1 Content -->
+            <div class="tab-content active" data-tab-id="tab-1">
+                <!-- Tab Header with Controls -->
+                <div class="tab-header">
+                    <div class="tab-actions">
+                        <button id="loadBtn-tab-1" class="btn btn-primary">Load</button>
+                        <button id="validateBtn-tab-1" class="btn btn-warning">Validate</button>
+                        <button id="executeBtn-tab-1" class="btn btn-success">Execute</button>
+                        <button id="stopBtn-tab-1" class="btn btn-danger" style="display: none;">Stop</button>
+                        <button id="clearBtn-tab-1" class="btn btn-secondary">Clear</button>
+                    </div>
+                </div>
+
+                <!-- Tab Status Bar -->
+                <div class="tab-status-bar">
+                    <div class="status-indicators">
+                        <div id="validationStatus-tab-1" class="status-indicator">VALIDATION</div>
+                    </div>
+                    <div id="fileName-tab-1" class="file-name">No file loaded</div>
+                </div>
+
+                <!-- Loading Overlay for this tab -->
+                <div id="loadingOverlay-tab-1" class="tab-loading-overlay" style="display: none;">
+                    <div class="loading-content">
+                        <div class="loading-spinner"></div>
+                        <div id="loadingText-tab-1" class="loading-text">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="main-content">
+                    <!-- Editor Section -->
+                    <div class="editor-section">
+                        <div class="section-header" onclick="app.toggleSection('editor', 'tab-1')">
+                            <h3>Workflow Editor</h3>
+                            <div class="header-controls">
+                                <button class="collapse-btn" id="editorCollapseBtn-tab-1">−</button>
+                            </div>
+                        </div>
+                        <div class="section-content" id="editorContent-tab-1">
+                            <textarea 
+                                id="workFlowEditor-tab-1" 
+                                class="workflow-editor" 
+                                placeholder="Paste or type your workflow here..."
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Progress Log Section -->
+                    <div id="progressLogSection-tab-1" class="progress-section" style="display: none;">
+                        <div class="section-header" onclick="app.toggleSection('progress', 'tab-1')">
+                            <h3>Progress Log</h3>
+                            <div class="header-controls">
+                                <button class="btn btn-sm btn-secondary" id="clearLogBtn-tab-1" onclick="event.stopPropagation(); app.clearProgressLog('tab-1')">Clear Log</button>
+                                <button class="collapse-btn" id="progressCollapseBtn-tab-1">−</button>
+                            </div>
+                        </div>
+                        <div class="section-content" id="progressContent-tab-1">
+                            <div id="progressLog-tab-1" class="progress-log"></div>
+                        </div>
+                    </div>
+
+                    <!-- Results Section -->
+                    <div class="results-section">
+                        <div class="section-header" onclick="app.toggleSection('results', 'tab-1')">
+                            <h3>Results</h3>
+                            <div class="header-controls">
+                                <button class="collapse-btn" id="resultsCollapseBtn-tab-1">−</button>
+                            </div>
+                        </div>
+                        <div class="section-content" id="resultsContent-tab-1">
+                            <div id="resultsContainer-tab-1" class="results-container"></div>
+                            <div id="progressBar-tab-1" class="progress-bar" style="display: none;">
+                                <div class="progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen Overlay -->
+        <div id="settingsScreen" class="settings-overlay" style="display: none;">
+            <div class="settings-container">
+                <div class="settings-header">
+                    <h2>Settings</h2>
+                    <button id="closeSettingsBtn" class="btn btn-sm btn-secondary">Close</button>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="settings-section">
+                        <h3>Devin Client Configuration</h3>
+                        <p class="settings-description">Configure polling behavior for Devin AI API requests</p>
+                        
+                        <div class="setting-group">
+                            <label for="maxPolls">Max Polls</label>
+                            <input type="number" id="maxPolls" min="1" max="99999" value="9999">
+                            <span class="setting-help">Maximum number of poll requests to send to Devin AI (default: 9999)</span>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="pollingInterval">Polling Interval (seconds)</label>
+                            <input type="number" id="pollingInterval" min="1" max="300" value="10">
+                            <span class="setting-help">Time between subsequent polling requests (default: 10 seconds)</span>
+                        </div>
+                        
+                        <div class="setting-group">
+                            <label for="firstPollingInterval">First Polling Interval (seconds)</label>
+                            <input type="number" id="firstPollingInterval" min="1" max="600" value="90">
+                            <span class="setting-help">Time before the first polling request (default: 90 seconds)</span>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-actions">
+                        <button id="saveSettingsBtn" class="btn btn-success">Save Settings</button>
+                        <button id="resetSettingsBtn" class="btn btn-warning">Reset to Defaults</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

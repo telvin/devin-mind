@@ -1,0 +1,67 @@
+<svg width="500" height="500" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer circle background -->
+  <circle cx="250" cy="250" r="250" fill="#1a3a3a"/>
+  
+  <!-- Gear background -->
+  <circle cx="250" cy="250" r="180" fill="#9e9e9e"/>
+  
+  <!-- Gear teeth -->
+  <g fill="#c0c0c0">
+    <!-- Top teeth -->
+    <rect x="240" y="60" width="20" height="30" rx="5"/>
+    <rect x="200" y="65" width="20" height="25" rx="5" transform="rotate(-30 210 77.5)"/>
+    <rect x="280" y="65" width="20" height="25" rx="5" transform="rotate(30 290 77.5)"/>
+    
+    <!-- Right teeth -->
+    <rect x="410" y="240" width="30" height="20" rx="5"/>
+    <rect x="405" y="200" width="25" height="20" rx="5" transform="rotate(-30 417.5 210)"/>
+    <rect x="405" y="280" width="25" height="20" rx="5" transform="rotate(30 417.5 290)"/>
+    
+    <!-- Bottom teeth -->
+    <rect x="240" y="410" width="20" height="30" rx="5"/>
+    <rect x="200" y="405" width="20" height="25" rx="5" transform="rotate(30 210 417.5)"/>
+    <rect x="280" y="405" width="20" height="25" rx="5" transform="rotate(-30 290 417.5)"/>
+    
+    <!-- Left teeth -->
+    <rect x="60" y="240" width="30" height="20" rx="5"/>
+    <rect x="65" y="200" width="25" height="20" rx="5" transform="rotate(30 77.5 210)"/>
+    <rect x="65" y="280" width="25" height="20" rx="5" transform="rotate(-30 77.5 290)"/>
+  </g>
+  
+  <!-- Inner circle frame -->
+  <circle cx="250" cy="250" r="150" fill="none" stroke="#e0e0e0" stroke-width="8"/>
+  <circle cx="250" cy="250" r="140" fill="none" stroke="#888" stroke-width="4"/>
+  
+  <!-- Brain/AI pattern -->
+  <g fill="#4db6ac" opacity="0.9">
+    <!-- Spiral brain pattern -->
+    <path d="M 250 150 Q 300 180 280 220 Q 260 240 250 250 Q 240 260 220 280 Q 200 320 250 350 Q 300 320 320 280 Q 340 240 320 200 Q 300 160 250 150" stroke="#26a69a" stroke-width="2" fill="#4db6ac"/>
+    
+    <!-- Neural nodes -->
+    <circle cx="220" cy="180" r="8" fill="#80cbc4"/>
+    <circle cx="280" cy="180" r="8" fill="#80cbc4"/>
+    <circle cx="250" cy="220" r="10" fill="#26a69a"/>
+    <circle cx="200" cy="250" r="6" fill="#80cbc4"/>
+    <circle cx="300" cy="250" r="6" fill="#80cbc4"/>
+    <circle cx="230" cy="290" r="7" fill="#80cbc4"/>
+    <circle cx="270" cy="290" r="7" fill="#80cbc4"/>
+    <circle cx="250" cy="320" r="8" fill="#26a69a"/>
+    
+    <!-- Connection lines -->
+    <path d="M 220 180 L 250 220 L 280 180" stroke="#26a69a" stroke-width="3" fill="none" opacity="0.7"/>
+    <path d="M 200 250 L 250 220 L 300 250" stroke="#26a69a" stroke-width="3" fill="none" opacity="0.7"/>
+    <path d="M 230 290 L 250 320 L 270 290" stroke="#26a69a" stroke-width="3" fill="none" opacity="0.7"/>
+  </g>
+  
+  <!-- Orbital rings -->
+  <g fill="none" stroke="#00bcd4" stroke-width="3" opacity="0.8">
+    <ellipse cx="250" cy="250" rx="120" ry="60" transform="rotate(15 250 250)"/>
+    <ellipse cx="250" cy="250" rx="110" ry="45" transform="rotate(-25 250 250)"/>
+  </g>
+  
+  <!-- Arrow elements -->
+  <g fill="#b0bec5">
+    <path d="M 320 150 L 380 120 L 370 140 L 420 130 L 370 160 L 380 150 L 320 180 Z" opacity="0.9"/>
+    <path d="M 350 180 L 400 160 L 390 175 L 430 170 L 390 190 L 400 185 L 350 210 Z" opacity="0.7"/>
+  </g>
+</svg>
