@@ -1,6 +1,6 @@
-# Sample Workflows for Devin MCP Server
+# Sample Workflows Instructions
 
-This document provides examples of markdown workflows that can be parsed and executed by the Devin MCP server.
+This document provides examples of markdown workflows that can be parsed and executed by the Devin Mind.
 
 ## Basic Workflow Format
 
@@ -139,46 +139,3 @@ Each workflow consists of numbered steps with specific parameters:
 - Optional, defaults to `yes`
 - `yes`: Appends previous step's handoff result to current prompt
 - `no`: Executes step independently
-
-## Usage with MCP Tools
-
-### Parse a workflow:
-```javascript
-await mcp.callTool('parse_workflow', {
-  markdown: workflowContent
-});
-```
-
-### Execute a complete workflow:
-```javascript
-await mcp.callTool('execute_workflow', {
-  workflow: workflowContent,
-  api_key: 'your-devin-api-key',
-  polling_interval: 10
-});
-```
-
-### Execute individual steps:
-```javascript
-// Create session
-const session = await mcp.callTool('create_devin_session', {
-  api_key: 'your-api-key',
-  prompt: 'Your prompt here',
-  playbook_id: 'playbook-name',
-  title: 'Session Title'
-});
-
-// Check status
-const status = await mcp.callTool('get_session_status', {
-  api_key: 'your-api-key',
-  session_id: session.session_id
-});
-```
-
-## Best Practices
-
-1. **Clear Prompts**: Make prompts specific and actionable
-2. **Meaningful Handoffs**: Specify what you want Devin to deliver
-3. **Logical Dependencies**: Use RelyPreviousStep when steps build on each other
-4. **Appropriate Playbooks**: Choose playbooks that match the task type
-5. **Error Handling**: Monitor execution results for failed steps
