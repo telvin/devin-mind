@@ -81,7 +81,7 @@ There are no pre-built downloadable binaries due to large file size.
 To use the desktop app, clone this repository and build the distribution for your platform:
 
 ```bash
-git clone https://github.com/your-repo/devin-mind.git
+git clone https://github.com/telvin/devin-mind.git
 cd devin-mind
 npm install
 ```
